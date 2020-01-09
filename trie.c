@@ -2,6 +2,7 @@
 // Created by sam on 09/01/2020.
 //
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "trie.h"
 #include <ctype.h>
@@ -36,6 +37,68 @@ int getWord(char w[]) {
 
 
 }
+
+void printNode(node *nodeP){
+    printf("%c\t",nodeP -> letter);
+    printf("%lu",nodeP -> count);
+}
+
+void freeNode(node *nodeP){
+    free(nodeP);
+}
+
+node *newNode(char letter, long unsigned int count){
+    node *nodeP = (node*)malloc(sizeof(node));
+
+    nodeP -> letter = letter;
+    nodeP -> count = count;
+
+    for(int i = 0; i < NUM_LETTERS; i++){
+        nodeP -> children[i] = NULL;
+    }
+
+    return nodeP;
+}
+
+node *indexOf(node *root, char c){
+    if(root -> letter == c){
+        return root;
+    }
+    for(int i = 0; i < NUM_LETTERS; i++){
+        if(root -> children[i] != NULL){
+            indexOf(root -> children[i],c);
+        }
+    }
+    return NULL;
+}
+
+node *insert(node *index, node *new){
+    index = new;
+    return index;
+}
+
+/*
+node *traverse(node *root){
+    node *p = root;
+    printf("%c", root -> letter);
+    for(int i = 0; i < NUM_LETTERS; i++){
+        if(p -> children[i] != NULL){
+            traverse(p);
+        }
+        p++;
+    }
+    return p;
+}
+
+node *addNode(node *root, node *new){
+    int index = (int)(new -> letter-'a');
+    if(root -> children[index] == NULL){
+
+    }else{
+        return NULL;
+    }
+}
+*/
 
 
 
