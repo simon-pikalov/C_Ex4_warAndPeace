@@ -8,32 +8,17 @@
 
 int main() {
 
+    /*
     printf("This is a test");
     char line[30] = "";
     getWord(line);
     printf(line);
-
-    /*
-    char *word = "allot";
-    struct node *root = newNode(*word,0);
-    /*
-    char *p = word;
-    while(*p){
-        printf("%c",*p);
-        p++;
-    }
-    printf("\n");
-    printNode(root);
-    //printf("Hello, World!\n");
-     */
-    /*
-    struct node *result = indexOf(root,'a');
-    if(result == NULL){
-        printf("not found");
-    }else{
-        printf("found");
-    }
-    freeNode(root);
     */
+
+    /* 10 January 2010 - Yevgeny - working example of adding the word 'allot' to trie*/
+    char *word = "allot";
+    node *root = newNode(*word,FALSE,0);
+    word++;
+    addNode(root,word);
     return  0;
 }

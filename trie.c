@@ -7,23 +7,9 @@
 #include "trie.h"
 #include <ctype.h>
 
-#define NUM_LETTERS 26
-typedef enum {FALSE=0, TRUE=1} boolean;
-
-
-typedef struct node {
-    char letter; // the char of the node
-    long unsigned int count; // how many word there is that end's here
-    struct node* children[NUM_LETTERS]; // a arr of pointers to children.
-    boolean hasSuns // boolean that indicates ,if the arr of pointer empty or not
-} node,*p_node;
-
-
 typedef struct trie {
 struct node root;
 } trie,*p_trie;
-
-
 
 
 /**
@@ -54,11 +40,13 @@ void freeNode(node *nodeP){
     free(nodeP);
 }
 
-node *newNode(char letter, long unsigned int count){
+// 10 January 2020 - Yevgeny - added boolean hasChildren
+node *newNode(char letter,boolean hasChildren, long unsigned int count){
     node *nodeP = (node*)malloc(sizeof(node));
 
     nodeP -> letter = letter;
     nodeP -> count = count;
+    nodeP -> hasChildren = hasChildren;
 
     for(int i = 0; i < NUM_LETTERS; i++){
         nodeP -> children[i] = NULL;
@@ -97,13 +85,26 @@ node *insert(node *index, node *new){
 //    return p;
 //}
 
-
-p_node addNode(p_node root, p_node new){
-    int index = (int)(new -> letter-'a');
+/**
+ * 10 January 2020 - Yevgeny
+ * insert word to a trie
+ * @param root the root of trie or any other starting point
+ * @param c pointer to array of chars
+ */
+void addNode(p_node root, char *c){
+    if(*c == '\0')
+        return;
+    int index = *c-'a';
+    if(!root){
+        root = newNode(*c,FALSE,0);
+    }
     if(root -> children[index] == NULL){
-
+        root -> children[index] = newNode(*c,FALSE,0);
+        c++;
+        addNode(root -> children[index],c);
     }else{
-        return NULL;
+        c++;
+        addNode(root -> children[index],c);
     }
 }
 
@@ -120,13 +121,14 @@ if( currChar>'z') { // if the input is not valid
 
    if(!pCurrNode) // if the root is null 
 {
-   *pCurrNode=*(newNode(currChar,isEndofWord)); // take the  char and put it to a new node 
+   *pCurrNode=*(newNode(currChar,isEndofWord,0)); // take the  char and put it to a new node
    return;
 } 
 
   if(pCurrNode->children[currChar-'a']==NULL) { // if curr node ->  at current chldren node has a place for the current char 
 
-*(pCurrNode->children[currChar-'a'])=*(newNode(currChar,isEndofWord)); // take the  char and put it to a new node 
+      // 10 January 2020 - Yevgeny - Maybe need to chnage *(newNode(currChar,isEndofWord,0)) to newNode(currChar,isEndofWord)
+*(pCurrNode->children[currChar-'a'])=*(newNode(currChar,isEndofWord,0)); // take the  char and put it to a new node
 }
 
 else { // recuer  with the right child 
