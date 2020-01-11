@@ -8,17 +8,14 @@
 
 int main() {
 
-    /*
-    printf("This is a test");
-    char line[30] = "";
-    getWord(line);
-    printf(line);
-    */
+
 
     /* 10 January 2010 - Yevgeny - working example of adding the word 'allot' to trie*/
     char *word = "allot";
-    node *root = newNode(*word,FALSE,0);
-    word++;
-    addNode(root,word);
+    node *root = newNode(*word,0);
+    addWordToTrie(root,word,0);
+    
+
     return  0;
+
 }
