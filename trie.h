@@ -12,15 +12,15 @@ typedef struct node {
     char letter; // the char of the node
     long unsigned int count; // how many word there is that end's here
     struct node* children[NUM_LETTERS]; // a arr of pointers to children.
-    boolean hasChildren // boolean that indicates ,if the arr of pointer empty or not
 } node,*p_node;
 
 int getWord(char w[]);
-struct node *newNode(char letter,boolean hasChildren, long unsigned int count);
+struct node *newNode(char letter, long unsigned int count);
 void freeNode(struct node *nodeP);
 void printNode(struct node *nodeP);
 void addNode(p_node root, char *c);
 struct node *indexOf(struct node *root, char c);
+void addWordToTrie(p_node *pCurrNode, char *word, int currWordIndex);
 
 
 #endif //C_EX3_WARANDPEACE_TRIE_H

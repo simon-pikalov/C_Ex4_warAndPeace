@@ -168,6 +168,9 @@ void addNode(p_node root, char *c)
  * @param currChar The char to be inserted
  * @param isEndofWord is it and of word.
  */
+ /* 11 January 2020 - Yevgeny -*pCurrNode as a parameter causes children not to be NULL.
+  * and as a result the function crash at line 202
+  * Maybe we are not using pointer to pointer as expected */
 void addWordToTrie(p_node *pCurrNode, char *word, int currWordIndex)
 { //currChar must be between 0-25 !
 
@@ -189,16 +192,18 @@ void addWordToTrie(p_node *pCurrNode, char *word, int currWordIndex)
         isEndofWord=FALSE;
     }
     
-
+    /* 11 January 2020 - Yevgeny - function newNode expects for char but receives char* */
     if (!pCurrNode) // if the root is null
     {
         *pCurrNode = (newNode(word, isEndofWord)); // take the  char and put it to a new node
         return;
     }
 
+    /* 11 January 2020 - Yevgeny - Here the function crash */
     if ((*pCurrNode)->children[treeIndex] == NULL)
     { // if curr node ->  at current chldren node has a place for the current char
 
+        /* 11 January 2020 - Yevgeny - function newNode expects for char but receives char* */
         ((*pCurrNode)->children[treeIndex]) = (newNode(word, isEndofWord)); // take the  char and put it to a new node
         return;
     }
