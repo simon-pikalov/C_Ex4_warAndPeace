@@ -7,15 +7,10 @@
 #include "trie.h"
 #include <ctype.h>
 
-typedef struct trie
-{
-    struct node root;
-} trie, *p_trie;
-
 /**
- * get char and convert it to lower case
- * @param The buff arr to store the word
-   @return the number of word's was declared
+ * Get word in lower case from standard input.
+ * @param w - pointer for storing a word.
+   @return the number of chars we've got.
  */
 int getWord(char w[])
 {
@@ -31,20 +26,12 @@ int getWord(char w[])
     return j;
 }
 
-void printNode(p_node nodeP)
-{
-    printf("%c\t", nodeP->letter);
-    printf("%lu", nodeP->count);
-}
-
 void freeNode(node *nodeP)
 {
     free(nodeP);
 }
 
-
-
-void printTree(p_node nodeP)
+void printTree(node *nodeP)
 {
     if(nodeP==NULL) {
     printf("|\n_");
@@ -65,25 +52,10 @@ void printTree(p_node nodeP)
 
 }
 
-
-void nodeInit(p_node nodeP,char let ,size_t count) {
-
-    for (int i = 0; i < NUM_LETTERS; i++)
-    {
-        nodeP->children[i] = NULL;
-    }
-  nodeP->letter = let;
-    nodeP->count = count;
-
-
-}
-
-
-
-// 10 January 2020 - Yevgeny - added boolean hasChildren
+// 12 January 2020 - Yevgeny
 node *newNode(char letter, long unsigned int count)
 {
-    node *nodeP = (node *)malloc(sizeof(node));
+    node *nodeP = (node*)malloc(sizeof(node));
 
     nodeP->letter = letter;
     nodeP->count = count;
@@ -97,65 +69,43 @@ node *newNode(char letter, long unsigned int count)
     return nodeP;
 }
 
-node *indexOf(node *root, char c)
-{
-    if (root->letter == c)
-    {
-        return root;
-    }
-    for (int i = 0; i < NUM_LETTERS; i++)
-    {
-        if (root->children[i] != NULL)
-        {
-            indexOf(root->children[i], c);
-        }
-    }
-    return NULL;
+// 12 January 2020 - Yevgeny
+trie *newTrie(){
+    trie *trieP = (trie*)malloc(sizeof(trie));
+    node *nodeP = newNode('*',0);
+    trieP -> root = nodeP;
+    return trieP;
 }
-
-node *insert(node *index, node *new)
-{
-    index = new;
-    return index;
-}
-
-//node *traverse(node *root){
-//    node *p = root;
-//    printf("%c", root -> letter);
-//    for(int i = 0; i < NUM_LETTERS; i++){
-//        if(p -> children[i] != NULL){
-//            traverse(p);
-//        }
-//        p++;
-//    }
-//    return p;
-//}
 
 /**
- * 10 January 2020 - Yevgeny
- * insert word to a trie
+ * 12 January 2020 - Yevgeny
+ * The function inserts a given word in to a trie data structure.
  * @param root the root of trie or any other starting point
  * @param c pointer to array of chars
  */
-void addNode(p_node root, char *c)
+void insertWord(node *root, char *c)
 {
-    if (*c == '\0')
+    if (*c == '\0') // If it's end of word we stop the recursion.
         return;
     int index = *c - 'a';
-    if (!root)
+    if (!root) // If current Node is Null then it's available fo adding new Node.
     {
         root = newNode(*c,0);
     }
-    if (root->children[index] == NULL)
+    if (root->children[index] == NULL) // Case 1: if index is free then we add the new Node here.
     {
         root->children[index] = newNode(*c,0);
-        c++;
-        addNode(root->children[index], c);
+        if(*(c+1) == '\0') // Check if next index is end of word. in that case we need to increment count by 1.
+            root->children[index]->count++;
+        c++; // Proceed to next char
+        insertWord(root->children[index], c); // Recursively add the next char.
     }
-    else
+    else // Case 2: if index is not available that means we need to proceed to next char and do nothing.
     {
-        c++;
-        addNode(root->children[index], c);
+         if(*(c+1) == '\0') // Check if next index is end of word. in that case we need to increment count by 1.
+             root->children[index]->count++;
+        c++; // Proceed to next char.
+        insertWord(root->children[index], c); // Recursively add the next char.
     }
 }
 
@@ -168,9 +118,7 @@ void addNode(p_node root, char *c)
  * @param currChar The char to be inserted
  * @param isEndofWord is it and of word.
  */
- /* 11 January 2020 - Yevgeny -*pCurrNode as a parameter causes children not to be NULL.
-  * and as a result the function crash at line 202
-  * Maybe we are not using pointer to pointer as expected */
+ /*
 void addWordToTrie(p_node *pCurrNode, char *word, int currWordIndex)
 { //currChar must be between 0-25 !
 
@@ -191,19 +139,15 @@ void addWordToTrie(p_node *pCurrNode, char *word, int currWordIndex)
     {
         isEndofWord=FALSE;
     }
-    
-    /* 11 January 2020 - Yevgeny - function newNode expects for char but receives char* */
     if (!pCurrNode) // if the root is null
     {
         *pCurrNode = (newNode(word, isEndofWord)); // take the  char and put it to a new node
         return;
     }
 
-    /* 11 January 2020 - Yevgeny - Here the function crash */
     if ((*pCurrNode)->children[treeIndex] == NULL)
     { // if curr node ->  at current chldren node has a place for the current char
 
-        /* 11 January 2020 - Yevgeny - function newNode expects for char but receives char* */
         ((*pCurrNode)->children[treeIndex]) = (newNode(word, isEndofWord)); // take the  char and put it to a new node
         return;
     }
@@ -221,3 +165,4 @@ void addWordToTrie(p_node *pCurrNode, char *word, int currWordIndex)
        addWordToTrie(pCurrNode, word,currWordIndex);
     }
 }
+*/
