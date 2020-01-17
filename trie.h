@@ -18,11 +18,14 @@ typedef struct trie
 {
     struct node *root;
 } trie;
-
-int getWord(char w[]);
+static const int numberOFLetters = 26;
+char* addChar(char * str , char c );
 struct node *newNode(char letter, long unsigned int count);
 trie *newTrie();
 void insertWord(node *root, char *c);
-
-
+void printWord(char* word, long unsigned int  value);
+void printTree(node *nodeP,char* tempWord);
+void printTreeReverse(node *root);
+void printTreeRevers(node *nodeP,char* tempWord);
+void buildTrieFromInput(trie *pTrie);
 #endif //C_EX3_WARANDPEACE_TRIE_H

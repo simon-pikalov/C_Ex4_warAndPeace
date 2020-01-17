@@ -19,6 +19,7 @@ int main() {
     char *word7 = "are";
     char *word8 = "ate";
     char *word9 = "be";
+    char *word10 = "allot";
     trie *myTrie = newTrie();
     insertWord(myTrie->root, word1);
     insertWord(myTrie->root, word2);
@@ -29,6 +30,11 @@ int main() {
     insertWord(myTrie->root, word7);
     insertWord(myTrie->root, word8);
     insertWord(myTrie->root, word9);
+    insertWord(myTrie->root, word10);
+    char tempword[0];
+    node *pNode = myTrie->root;
+    printTree(pNode,tempword);
+    printTreeRevers(pNode,tempword);
     return  0;
 
 }
