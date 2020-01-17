@@ -42,12 +42,11 @@ char* addChar(char * str , char c ) {
     str2[len] = c;
     str2[len + 1] = '\0';
     return str2;
-
 }
 
 void printWord(char* word, long unsigned int  value) {
 
-    if(*word==NULL) return;
+    if(*word=='\0') return;
     printf("%s %lu\n",word,value);
 }
 
@@ -88,10 +87,8 @@ void printTreeRevers(node *nodeP,char* tempWord) {
 
     for (int i = numberOFLetters-1; i >= 0; i--) {
         if(nodeP->children[i]==NULL||(nodeP->letter)==0 ) continue;
-        printTree(nodeP->children[i], tempWord); // recursive call
+        printTreeRevers(nodeP->children[i], tempWord); // recursive call
     }
-
-
 }
 
 
@@ -150,5 +147,3 @@ void printTreeRevers(node *nodeP,char* tempWord) {
         }
 
     }
-
-
