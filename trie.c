@@ -12,25 +12,51 @@ void freeNode(node *nodeP)
     free(nodeP);
 }
 
+/**
+ * 18 January 2020 - Yevgeny
+ * The function reads a single word from standard input.
+ * @param word - Pointer to an empty word which will be used to fill with letters from input.
+ * @return - Pointer to to the newly created word.
+ */
 char* getWordDynamically(char *word){
     int c, index = 0;
-    word = (char*)malloc(sizeof(char));
+    word = (char*)malloc(sizeof(char)); // Allocate memory for one letter (char).
     *word = '\0';
+    char *pStartIndex = word; // Save starting index of 'word'.
     while ((c = getchar()) != EOF && c != '\t' && c != ' ' && c != '\n'){
-        word = realloc(word,(index+1)* sizeof(char));
-        *(word + index) = (char)tolower(c);
-        index++;
+        word = realloc(word,(index+1)* sizeof(char)); // If we got a 'good' letter then reallocate memory for being able to store it.
+        if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) { // If letter aren't between bounds ( a-z or A-Z).
+            *(word + index) = '\0'; // Cut the word at current index
+            return pStartIndex; // Return starting index of letters which already placed in 'word' ('\0' in case of none).
+        } else { // Else we need to insert current char and continue to the next one.
+            *(word + index) = (char) tolower(c); // Add the new letter to the array of chars.
+            index++; // Go to the next letter index.
+        }
     }
-    word = realloc(word,(index+1)* sizeof(char));
-    *(word + index) = '\0';
+    if(c == EOF) { // If end of file.
+        char *result = NULL;
+        return result; // return pointer to NULL.
+    }
+    word = realloc(word,(index+1)* sizeof(char)); // Finally, when we have no more letters, enlarge 'word' by 1 index.
+    *(word + index) = '\0'; // Put '\0' at the end of word.
     return word;
 }
 
+/**
+ * 18 January 2020 - Yevgeny
+ * The function read words from standard input, then inserts it to a Trie data structure.
+ * @param pTrie - pointer to the Trie.
+ */
 void buildTrieFromInput(trie *pTrie){
-    char *word;
-    while ((word = getWordDynamically(word))){
-        insertWord(pTrie->root,word);
-        free(word);
+    char *word = ""; // Create empty string
+    while ((word = getWordDynamically(word)) != NULL){ // Read words until it's end of file. (getWordDynamically returns pointer to NULL in such case).
+        if(*word != '\0') { // If it's not an empty string (getWordDynamically may return an empty string if it reads illegal letters).
+            insertWord(pTrie->root, word); // Finally after making sure it's a 'good' word we insert it to our Trie.
+            free(word); // Free memory which allocated by word after insertion.
+        } else{ // Else if it's and empty string.
+            free(word); // Free the memory allocated by empty string.
+            continue; // Continue to search for words.
+        }
     }
 }
 
@@ -72,7 +98,7 @@ void printTree(node *nodeP,char* tempWord) {
 }
 
 //simon 17/01
-void printTreeRevers(node *nodeP,char* tempWord) {
+void printTreeReverse(node *nodeP, char* tempWord) {
     if (nodeP == NULL) {
         return;
     }
@@ -87,10 +113,9 @@ void printTreeRevers(node *nodeP,char* tempWord) {
 
     for (int i = numberOFLetters-1; i >= 0; i--) {
         if(nodeP->children[i]==NULL||(nodeP->letter)==0 ) continue;
-        printTreeRevers(nodeP->children[i], tempWord); // recursive call
+        printTreeReverse(nodeP->children[i], tempWord); // recursive call
     }
 }
-
 
 // 12 January 2020 - Yevgeny
     node *newNode(char letter, long unsigned int count) {
@@ -116,7 +141,6 @@ void printTreeRevers(node *nodeP,char* tempWord) {
     return trieP;
 }
 
-
 /**
  * 12 January 2020 - Yevgeny
  * The function inserts a given word in to a trie data structure.
@@ -138,7 +162,7 @@ void printTreeRevers(node *nodeP,char* tempWord) {
                 root->children[index]->count++;
             c++; // Proceed to next char
             insertWord(root->children[index], c); // Recursively add the next char.
-        } else // Case 2: if index is not available that means we need to proceed to next char and do nothing.
+        } else // Case 2: if index is not available that means we need to proceed to next char without changing current letter.
         {
             if (*(c + 1) == '\0') // Check if next index is end of word. in that case we need to increment count by 1.
                 root->children[index]->count++;
@@ -147,3 +171,4 @@ void printTreeRevers(node *nodeP,char* tempWord) {
         }
 
     }
+
