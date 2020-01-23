@@ -7,6 +7,7 @@
 
 typedef enum {FALSE=0, TRUE=1} boolean;
 #define NUM_LETTERS 26
+typedef enum {DEFAULT = 22, REVERSE = 23} printOrder;
 
 typedef struct node {
     char letter; // the char of the node
@@ -20,13 +21,15 @@ typedef struct trie
 } trie;
 
 static const int numberOFLetters = 26;
-char* addChar(char * str , char c );
+char* addChar(char *str , char c);
 struct node *newNode(char letter, long unsigned int count);
 trie *newTrie();
+char* getWordDynamically(char *word);
 void insertWord(node *root, char *c);
 void printWord(char* word, long unsigned int  value);
 void printTree(node *nodeP,char* tempWord);
 void printTreeReverse(node *nodeP,char* tempWord);
+void printTreeByOrder(trie *pTrie, printOrder option);
 void buildTrieFromInput(trie *pTrie);
 void cleanTrie(trie *pTrie);
 void cleanTrieRecursive(node **parent);

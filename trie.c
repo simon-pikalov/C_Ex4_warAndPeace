@@ -17,18 +17,18 @@ char* getWordDynamically(char *word){
     int c, index = 0;
     word = (char*)malloc(sizeof(char)); // Allocate memory for one letter (char).
     *word = '\0';
-    char *pStartIndex = word; // Save starting index of 'word'.
     while ((c = getchar()) != EOF && c != '\t' && c != ' ' && c != '\n'){
         word = realloc(word,(index+1)* sizeof(char)); // If we got a 'good' letter then reallocate memory for being able to store it.
         if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) { // If letter aren't between bounds ( a-z or A-Z).
             *(word + index) = '\0'; // Cut the word at current index
-            return pStartIndex; // Return starting index of letters which already placed in 'word' ('\0' in case of none).
+            return word; // Return starting index of letters which already placed in 'word' ('\0' in case of none).
         } else { // Else we need to insert current char and continue to the next one.
             *(word + index) = (char) tolower(c); // Add the new letter to the array of chars.
             index++; // Go to the next letter index.
         }
     }
     if(c == EOF) { // If end of file.
+        free(word); 
         char *result = NULL;
         return result; // return pointer to NULL.
     }
@@ -99,7 +99,7 @@ void cleanTrieRecursive(node **parent){
 }
 
 char* addChar(char * str , char c ) {
-    if(c==0||c<'a'||c>'z') return "";
+    if(c==0||c<'a'||c>'z') return str;
     size_t len = strlen(str);
     char *str2 = malloc(len + 1 + 1 ); /* one for extra char, one for trailing zero */
     strcpy(str2, str);
@@ -112,6 +112,21 @@ void printWord(char* word, long unsigned int  value) {
 
     if(*word=='\0') return;
     printf("%s %lu\n",word,value);
+}
+/**
+ * 23 January - Yevgeny
+ * Print all words from trie data structure by order.
+ * @param pTrie - Pointer to trie data structure.
+ * @param option - DEFAULT: alphabetic order. REVERSE: reverse alphabetic order.
+ */
+void printTreeByOrder(trie *pTrie, printOrder option){
+    char *wordContainer = (char*)malloc(sizeof(char)*2);
+    node *root = pTrie->root;
+    if(option == DEFAULT){
+        printTree(root,wordContainer);
+    } else{
+        printTreeReverse(root,wordContainer);
+    }
 }
 
 //simon 17/01
@@ -132,6 +147,7 @@ void printTree(node *nodeP,char* tempWord) {
         if(nodeP->children[i]==NULL||(nodeP->letter)==0 ) continue;
         printTree(nodeP->children[i], tempWord); // recursive call
     }
+    free(tempWord); // 23 January - Yevgeny
 }
 
 //simon 17/01
@@ -152,6 +168,7 @@ void printTreeReverse(node *nodeP, char* tempWord) {
         if(nodeP->children[i]==NULL||(nodeP->letter)==0 ) continue;
         printTreeReverse(nodeP->children[i], tempWord); // recursive call
     }
+    free(tempWord); // 23 January - Yevgeny
 }
 
 // 12 January 2020 - Yevgeny
@@ -207,4 +224,3 @@ void printTreeReverse(node *nodeP, char* tempWord) {
         }
 
     }
-

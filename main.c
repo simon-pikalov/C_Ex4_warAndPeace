@@ -9,16 +9,13 @@ int main(int argc, char **argv) {
     trie *myTrie = newTrie();
     buildTrieFromInput(myTrie);
 
-    node *pNode = myTrie->root;
-    char tempword[0];
-
     if(argc == 1) {
-        printTree(pNode, tempword);
+        printTreeByOrder(myTrie,DEFAULT);
         cleanTrie(myTrie);
     }else if(argc == 2){
         char option = **(argv+1);
         if(option == 'r') {
-            printTreeReverse(pNode, tempword);
+            printTreeByOrder(myTrie,REVERSE);
             cleanTrie(myTrie);
         }else{
             printf("Illegal argument %c\n",option);
@@ -26,5 +23,7 @@ int main(int argc, char **argv) {
     } else {
         printf("Too many arguments\n");
     }
+
     return  0;
+
 }
