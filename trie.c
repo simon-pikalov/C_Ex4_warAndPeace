@@ -111,7 +111,7 @@ char* addChar(char * str , char c ) {
 void printWord(char* word, long unsigned int  value) {
 
     if(*word=='\0') return;
-    printf("%s\t%lu\n",word,value);
+    printf("%s %lu\n",word,value);
 }
 /**
  * 23 January - Yevgeny
