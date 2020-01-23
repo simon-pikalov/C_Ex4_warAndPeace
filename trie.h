@@ -28,5 +28,7 @@ void printWord(char* word, long unsigned int  value);
 void printTree(node *nodeP,char* tempWord);
 void printTreeReverse(node *nodeP,char* tempWord);
 void buildTrieFromInput(trie *pTrie);
+void cleanTrie(trie *pTrie);
+void cleanTrieRecursive(node **parent);
 
 #endif //C_EX3_WARANDPEACE_TRIE_H

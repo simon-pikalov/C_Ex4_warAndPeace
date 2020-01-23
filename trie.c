@@ -7,11 +7,6 @@
 #include "trie.h"
 #include <ctype.h>
 
-void freeNode(node *nodeP)
-{
-    free(nodeP);
-}
-
 /**
  * 18 January 2020 - Yevgeny
  * The function reads a single word from standard input.
@@ -60,6 +55,49 @@ void buildTrieFromInput(trie *pTrie){
     }
 }
 
+/**
+ * 23 January 2020 - Yevgeny
+ * Helper function to check if given node has children.
+ * @param pNode - node to check on.
+ * @return TRUE if parent got children.
+ */
+boolean hasChildren(node *pNode){
+    for (int i = 0; i < NUM_LETTERS; i++) {
+        if(pNode->children[i] != NULL)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+/**
+ * 23 January 2020 - Yevgeny
+ * The function free all memory allocated by struct true.
+ * @param pTrie - Pointer to trie data structure.
+ */
+void cleanTrie(trie *pTrie){
+    node **root = &(pTrie->root); // Define double pointer to the root.
+    cleanTrieRecursive(root); // Call to recursive helper function which handles all the cleanup.
+    free(pTrie); // Finally free the trie struct itself.
+}
+
+/**
+ * 23 January 2020 - Yevgeny
+ * Recursive helper function of 'cleanTrie' which recur on all nodes of a trie and frees memory.
+ * @param parent - Double pointer to first node from which need to start.
+ */
+void cleanTrieRecursive(node **parent){
+    if(!*parent) // If parent is NULL stop recursion and return.
+        return;
+    for(int i = 0; i < NUM_LETTERS; i++){ // Traverse all children.
+        node **child = &((*parent)->children[i]); // Define double pointer to each child.
+        cleanTrieRecursive(child); // Recursive call on child.
+    }
+    if(!hasChildren(*parent)) { // If parent doesn't have children then it can be freed.
+        free(*parent);
+        *parent = NULL; // assign NULL to parent pointer after freed (for recursion stop condition).
+    }
+}
+
 char* addChar(char * str , char c ) {
     if(c==0||c<'a'||c>'z') return "";
     size_t len = strlen(str);
@@ -94,7 +132,6 @@ void printTree(node *nodeP,char* tempWord) {
         if(nodeP->children[i]==NULL||(nodeP->letter)==0 ) continue;
         printTree(nodeP->children[i], tempWord); // recursive call
     }
-
 }
 
 //simon 17/01
@@ -119,7 +156,7 @@ void printTreeReverse(node *nodeP, char* tempWord) {
 
 // 12 January 2020 - Yevgeny
     node *newNode(char letter, long unsigned int count) {
-        node *nodeP = (node *) malloc(sizeof(node));
+        node *nodeP = (node *) malloc(sizeof(struct node));
 
         nodeP->letter = letter;
         nodeP->count = count;
@@ -130,12 +167,11 @@ void printTreeReverse(node *nodeP, char* tempWord) {
         }
 
         return nodeP;
-
 }
 
 // 12 January 2020 - Yevgeny
     trie *newTrie(){
-    trie *trieP = (trie*)malloc(sizeof(trie));
+    trie *trieP = (trie*)malloc(sizeof(struct trie));
     node *nodeP = newNode('*',0);
     trieP -> root = nodeP;
     return trieP;
