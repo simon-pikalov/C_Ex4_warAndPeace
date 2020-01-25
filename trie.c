@@ -20,8 +20,7 @@ char* getWordDynamically(char *word){
     while ((c = getchar()) != EOF && c != '\t' && c != ' ' && c != '\n'){
         word = realloc(word,(index+1)* sizeof(char)); // If we got a 'good' letter then reallocate memory for being able to store it.
         if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) { // If letter aren't between bounds ( a-z or A-Z).
-            *(word + index) = '\0'; // Cut the word at current index
-            return word; // Return starting index of letters which already placed in 'word' ('\0' in case of none).
+            continue; // Continue to the next char.
         } else { // Else we need to insert current char and continue to the next one.
             *(word + index) = (char) tolower(c); // Add the new letter to the array of chars.
             index++; // Go to the next letter index.
